@@ -4,9 +4,9 @@ A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stabl
 
 ## Features
 
-- Live reserves data from Ethereum mainnet
+- Live reserves data, posted to Ethereum mainnet every 10 mins
 - On-chain data via Chainlink oracle (`latestBundle()` + `bundleDecimals()`)
-- Auto-refresh every 60 seconds + manual refresh
+- The page auto refreshes every 60 seconds + manual refresh
 - Contract details with copyable oracle address and Etherscan link
 - Dark/light theme toggle (defaults to dark)
 - Responsive design (mobile + desktop)
@@ -90,7 +90,7 @@ Open [http://localhost:3000](http://localhost:3000)
 2. `useReadContracts` (wagmi) multicalls `latestBundle()` and `bundleDecimals()` on the Chainlink oracle at [`0x691b...d4c4`](https://etherscan.io/address/0x691b74146cdba162449012aa32d3cbf5df77d4c4#readContract)
 3. `latestBundle()` returns `bytes` which is `abi.encode(uint256 timestamp, uint256 reserves)` — decoded with viem's `decodeAbiParameters`
 4. Reserves are divided by `10^decimals` (18) for the human-readable USD amount
-5. Data auto-refreshes every 60 seconds; block number updates in real-time via `useBlockNumber({ watch: true })`
+5. RPC data auto-refreshes every 60 seconds; block number updates in real-time via `useBlockNumber({ watch: true })`
 
 ## RPC Configuration
 
