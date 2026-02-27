@@ -77,6 +77,18 @@ export function ContractDetails({
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-6">
+          <DetailField label="Data source">
+            <Link
+              href={ETHERSCAN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-foreground"
+            >
+              Chainlink Oracle
+              <ExternalLink className="size-3.5 shrink-0 text-brand-500" />
+            </Link>
+          </DetailField>
+
           <DetailField label="Oracle contract">
             <Tooltip>
               <TooltipTrigger asChild>

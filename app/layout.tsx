@@ -23,9 +23,63 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} | ${siteConfig.title}`,
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.title,
   description: siteConfig.description,
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  applicationName: siteConfig.applicationName,
+  generator: siteConfig.generator,
+  authors: siteConfig.authors,
+  keywords: siteConfig.keywords,
+  manifest: siteConfig.manifest,
+  robots: 'index, follow',
+  alternates: { canonical: './' },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black',
+    title: siteConfig.name,
+  },
+  icons: [
+    { rel: 'icon', url: '/favicon.ico' },
+    {
+      rel: 'icon',
+      url: '/favicon-16x16.png',
+      sizes: '16x16',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/favicon-32x32.png',
+      sizes: '32x32',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/favicon-96x96.png',
+      sizes: '96x96',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/favicon-180x180.png',
+      sizes: '180x180',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/favicon-300x300.png',
+      sizes: '300x300',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/favicon-512x512.png',
+      sizes: '512x512',
+      type: 'image/png',
+    },
+    { rel: 'apple-touch-icon', sizes: '180x180', url: '/apple-touch-icon.png' },
+  ],
+  openGraph: siteConfig.openGraph,
+  twitter: siteConfig.twitter,
 };
 
 export default function RootLayout({
@@ -34,11 +88,25 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={fontSans.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={fontSans.variable}
+      suppressHydrationWarning
+      translate="no"
+    >
       <head>
-        {/* Preconnect to Ethereum RPCs for faster first data load */}
+        <meta content="notranslate" name="google" />
+
+        {/* Preconnect to CDN and primary RPCs for faster first load */}
+        <link href={siteConfig.cdn} rel="preconnect" />
+        {/* EVM */}
         <link href="https://rpc.ankr.com" rel="dns-prefetch" />
         <link href="https://ethereum.publicnode.com" rel="dns-prefetch" />
+        <link href="https://bsc-rpc.publicnode.com" rel="dns-prefetch" />
+        {/* Non-EVM */}
+        <link href="https://api.trongrid.io" rel="dns-prefetch" />
+        <link href="https://solana-rpc.publicnode.com" rel="dns-prefetch" />
+        <link href="https://api.mainnet.aptoslabs.com" rel="dns-prefetch" />
       </head>
       <body className="min-w-[340px] overflow-x-hidden bg-background font-sans antialiased">
         <ThemeProvider

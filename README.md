@@ -1,16 +1,21 @@
 # USD1 Proof of Reserves Dashboard
 
-A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stablecoin reserve data directly from the Ethereum blockchain via a Chainlink oracle smart contract. All data is sourced on-chain — no backend, no API keys required.
+**Live at [por.worldlibertyfinancial.com](https://por.worldlibertyfinancial.com)**
+
+A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stablecoin reserve data from a Chainlink oracle on Ethereum and tracks USD1 total supply across five chains (Ethereum, BNB Chain, Tron, Solana, Aptos). All data is sourced on-chain — no backend, no API keys required.
 
 ## Features
 
 - Live reserves data, posted to Ethereum mainnet every 10 mins
 - On-chain data via Chainlink oracle (`latestBundle()` + `bundleDecimals()`)
+- Multi-chain USD1 supply tracking (Ethereum, BNB Chain, Tron, Solana, Aptos)
+- Collateralization ratio computed from on-chain reserves vs. total supply
+- Per-chain supply breakdown with token addresses, copy-to-clipboard, and block explorer links
 - The page auto refreshes every 60 seconds + manual refresh
 - Contract details with copyable oracle address and Etherscan link
 - Dark/light theme toggle (defaults to dark)
 - Responsive design (mobile + desktop)
-- No API keys or backend required — uses public Ethereum RPCs
+- No API keys or backend required — uses public RPCs
 
 ## Tech Stack
 
@@ -18,7 +23,8 @@ A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stabl
 |----------|------------|
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript 5.9 |
-| Web3 | wagmi 3 + viem 2 (contract reads via `useReadContracts` multicall) |
+| Web3 (EVM) | wagmi 3 + viem 2 (contract reads via `useReadContracts` multicall) |
+| Web3 (non-EVM) | @aptos-labs/ts-sdk, @solana/kit, tronweb |
 | State | React Query (@tanstack/react-query) |
 | Styling | Tailwind CSS 4 + shadcn/ui (Radix Nova) |
 | Linting | Biome 2 |
@@ -66,8 +72,9 @@ Open [http://localhost:3000](http://localhost:3000)
 │   │   ├── dashboard.tsx   # Main orchestrator (fetches data, composes sections)
 │   │   ├── header.tsx      # Logo, title, Live badge, theme toggle
 │   │   ├── hero.tsx        # Large reserves display
-│   │   ├── stats-grid.tsx  # Collateralization ratio + data source cards
-│   │   ├── contract-details.tsx  # Oracle address, Etherscan link, raw details
+│   │   ├── stats-grid.tsx  # Collateralization ratio + total supply cards
+│   │   ├── contract-details.tsx  # Data source, oracle address, raw details
+│   │   ├── chain-supply-details.tsx  # Per-chain USD1 supply breakdown
 │   │   └── footer.tsx      # Data source disclaimer
 │   ├── primitives/         # Reusable display components
 │   │   └── formatted-number.tsx  # Number formatting
@@ -76,25 +83,40 @@ Open [http://localhost:3000](http://localhost:3000)
 │   │   └── wagmi.tsx       # WagmiProvider + QueryClientProvider
 │   └── ui/                 # shadcn/ui component library
 ├── hooks/
-│   └── use-por-data.ts     # Core hook: reads contract, decodes bundle, returns POR data
+│   ├── use-por-data.ts     # Reads Chainlink oracle, decodes bundle, returns POR data
+│   └── use-usd1-supply.ts  # Aggregates USD1 supply across all 5 chains
 ├── lib/
 │   ├── config/site.ts      # Site metadata
-│   ├── contracts/por-oracle.ts  # Oracle address, ABI, constants
-│   ├── wagmi.ts            # Wagmi config (mainnet, public RPCs with fallback)
+│   ├── contracts/
+│   │   ├── por-oracle.ts   # Oracle address, ABI, constants
+│   │   └── usd1-token.ts   # USD1 addresses, chain metadata, explorer URLs
+│   ├── fetchers/           # Non-EVM supply fetchers (Tron, Solana, Aptos)
+│   ├── wagmi.ts            # Wagmi config (mainnet + BSC, public RPCs with fallback)
 │   └── utils.ts            # cn() classname utility
 ```
 
 ## How It Works
 
+### Reserves (Chainlink Oracle)
 1. The app connects to Ethereum mainnet via public RPCs (no wallet needed)
 2. `useReadContracts` (wagmi) multicalls `latestBundle()` and `bundleDecimals()` on the Chainlink oracle at [`0x691b...d4c4`](https://etherscan.io/address/0x691b74146cdba162449012aa32d3cbf5df77d4c4#readContract)
 3. `latestBundle()` returns `bytes` which is `abi.encode(uint256 timestamp, uint256 reserves)` — decoded with viem's `decodeAbiParameters`
 4. Reserves are divided by `10^decimals` (18) for the human-readable USD amount
 5. RPC data auto-refreshes every 60 seconds; block number updates in real-time via `useBlockNumber({ watch: true })`
 
+### USD1 Supply (Multi-chain)
+1. **Ethereum & BNB Chain** — ERC-20 `totalSupply()` via wagmi `useReadContracts` multicall (viem `erc20Abi`)
+2. **Tron** — `totalSupply()` contract call via `tronweb` with RPC fallback (TronGrid → TronStack)
+3. **Solana** — `getTokenSupply` on the USD1 mint via `@solana/kit` with RPC fallback (PublicNode → Ankr)
+4. **Aptos** — `getFungibleAssetMetadataByAssetType` via `@aptos-labs/ts-sdk` (mainnet, reads `supply_v2`)
+5. Non-EVM fetchers run as `@tanstack/react-query` queries; per-chain supplies are normalized to 18 decimals and summed for the total; collateralization ratio = reserves / total supply
+
+### Refresh
+All data auto-refreshes every 60 seconds; block number updates in real-time via `useBlockNumber({ watch: true })`.
+
 ## RPC Configuration
 
-The app uses 5 public CORS-friendly Ethereum RPCs with automatic fallback (configured in `lib/wagmi.ts`). No API keys needed. For better reliability, you can replace them with your own RPC URL (Alchemy, Infura, etc.).
+The app uses public CORS-friendly RPCs with automatic fallback for each chain (configured in `lib/wagmi.ts` and `lib/contracts/usd1-token.ts`). No API keys needed. For better reliability, you can replace them with your own RPC URLs.
 
 ## Legal Disclaimer
 

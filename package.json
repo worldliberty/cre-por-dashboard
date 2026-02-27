@@ -13,17 +13,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.90.21",
+    "@aptos-labs/ts-sdk": "catalog:web3",
+    "@solana/kit": "catalog:web3",
+    "@tanstack/react-query": "catalog:ui",
     "class-variance-authority": "catalog:ui",
     "clsx": "catalog:ui",
     "lucide-react": "catalog:ui",
     "next": "catalog:nextjs",
-    "next-themes": "^0.4.6",
-    "nextjs-toploader": "^3.9.17",
+    "next-themes": "catalog:nextjs",
+    "nextjs-toploader": "catalog:nextjs",
     "radix-ui": "catalog:ui",
     "react": "catalog:ui",
     "react-dom": "catalog:ui",
     "tailwind-merge": "catalog:ui",
+    "tronweb": "catalog:web3",
     "tw-animate-css": "catalog:ui",
     "viem": "catalog:web3",
     "wagmi": "catalog:web3"

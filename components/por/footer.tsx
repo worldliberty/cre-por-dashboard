@@ -19,7 +19,7 @@ export function Footer() {
           src="/images/logo.svg"
           width={240}
         />
-        <div className="flex flex-col text-xs text-foreground-quaternary">
+        <div className="text-xs text-foreground-quaternary">
           Accuracy of data is not guaranteed and provided for informational
           purposes only. For official reserve reports, visit{' '}
           <Link
@@ -30,7 +30,6 @@ export function Footer() {
           >
             worldlibertyfinancial.com/usd1
           </Link>
-          .
         </div>
       </div>
 
