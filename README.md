@@ -15,7 +15,7 @@ A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stabl
 - Contract details with copyable oracle address and Etherscan link
 - Dark/light theme toggle (defaults to dark)
 - Responsive design (mobile + desktop)
-- No API keys or backend required — uses public RPCs
+- No API keys or backend required — uses public RPCs (with optional custom RPC endpoints)
 
 ## Tech Stack
 
@@ -25,7 +25,7 @@ A real-time dashboard that reads [USD1](https://worldlibertyfinancial.com) stabl
 | Language | TypeScript 5.9 |
 | Web3 (EVM) | wagmi 3 + viem 2 (contract reads via `useReadContracts` multicall) |
 | Web3 (non-EVM) | @aptos-labs/ts-sdk, @solana/kit, tronweb |
-| State | React Query (@tanstack/react-query) |
+| State | React Query + Jotai (custom RPCs persisted in localStorage) |
 | Styling | Tailwind CSS 4 + shadcn/ui (Radix Nova) |
 | Linting | Biome 2 |
 | Git hooks | Lefthook + Commitlint (conventional commits) |
@@ -75,10 +75,13 @@ Open [http://localhost:3000](http://localhost:3000)
 │   │   ├── stats-grid.tsx  # Collateralization ratio + total supply cards
 │   │   ├── contract-details.tsx  # Data source, oracle address, raw details
 │   │   ├── chain-supply-details.tsx  # Per-chain USD1 supply breakdown
+│   │   ├── refresh-button.tsx  # Extracted refresh button
+│   │   ├── rpc-settings-dialog.tsx  # Custom RPC settings dialog
 │   │   └── footer.tsx      # Data source disclaimer
 │   ├── primitives/         # Reusable display components
 │   │   └── formatted-number.tsx  # Number formatting
 │   ├── providers/          # React context providers
+│   │   ├── store.tsx       # Jotai StoreProvider
 │   │   ├── theme.tsx       # next-themes ThemeProvider
 │   │   └── wagmi.tsx       # WagmiProvider + QueryClientProvider
 │   └── ui/                 # shadcn/ui component library
@@ -91,6 +94,10 @@ Open [http://localhost:3000](http://localhost:3000)
 │   │   ├── por-oracle.ts   # Oracle address, ABI, constants
 │   │   └── usd1-token.ts   # USD1 addresses, chain metadata, explorer URLs
 │   ├── fetchers/           # Non-EVM supply fetchers (Tron, Solana, Aptos)
+│   ├── schemas/rpc.ts      # Zod schemas for RPC URL validation
+│   ├── store/
+│   │   ├── index.ts        # Jotai store
+│   │   └── rpc.ts          # Custom RPCs atom with localStorage persistence
 │   ├── wagmi.ts            # Wagmi config (mainnet + BSC, public RPCs with fallback)
 │   └── utils.ts            # cn() classname utility
 ```
@@ -116,7 +123,27 @@ All data auto-refreshes every 60 seconds; block number updates in real-time via 
 
 ## RPC Configuration
 
-The app uses public CORS-friendly RPCs with automatic fallback for each chain (configured in `lib/wagmi.ts` and `lib/contracts/usd1-token.ts`). No API keys needed. For better reliability, you can replace them with your own RPC URLs.
+The app uses public CORS-friendly RPCs with automatic fallback for each chain. No API keys needed.
+
+### Custom RPC Endpoints
+
+You can add your own RPC URLs per chain via the **Settings** (gear icon) button in the header:
+
+1. Click the gear icon → "RPC Settings"
+2. Add one or more URLs for any chain (Ethereum, BNB Chain, Tron, Solana, Aptos)
+3. Click **Save**
+
+Custom endpoints are tried **first**, before falling back to the built-in defaults. Settings are validated (must be `http(s)` URLs) and persisted in `localStorage`.
+
+### Default RPCs
+
+| Chain | Endpoints |
+|-------|-----------|
+| Ethereum | Ankr, PublicNode, DRPC, 1RPC |
+| BNB Chain | Ankr, PublicNode, Binance, 1RPC |
+| Tron | TronGrid, TronStack |
+| Solana | PublicNode, Ankr |
+| Aptos | Aptos SDK default (mainnet) |
 
 ## Legal Disclaimer
 
