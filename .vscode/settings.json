@@ -1,0 +1,23 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "editor.codeActionsOnSave": {
+    "source.biome": "always",
+    "source.fixAll.biome": "never",
+    "source.organizeImports.biome": "never"
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.autoSaveWhenNoErrors": true,
+  "tailwindCSS.experimental.classRegex": ["className: ['\"](.+?)['\"]"],
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "@radix-ui/*",
+    "postcss",
+    "lucide-react"
+  ]
+}

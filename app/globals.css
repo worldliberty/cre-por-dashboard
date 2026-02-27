@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+
+  /* Shadcn semantic colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand palette (used shades only) */
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+
+  /* Additional semantic colors */
+  --color-background-secondary: var(--background-secondary);
+  --color-background-disabled: var(--background-disabled);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-tertiary: var(--foreground-tertiary);
+  --color-foreground-quaternary: var(--foreground-quaternary);
+  --color-border-secondary: var(--border-secondary);
+  --color-success-foreground: var(--success-foreground);
+
+  /* Shadows */
+  --shadow-tooltip: var(--shadow-tooltip);
+  --shadow-input: var(--shadow-input);
+
+  /* Border radius (absolute scale) */
+  --radius-xs: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-3xl: 1.25rem;
+  --radius-full: 624.9375rem;
+}
+
+:root {
+  /* Base colors */
+  --base-white: hsl(0, 0%, 100%);
+
+  /* Brand palette (amber/gold) */
+  --brand-300: hsl(48, 98%, 64%);
+  --brand-500: hsl(44, 93%, 47%);
+  --brand-600: hsl(39, 96%, 40%);
+
+  /* Gray palette (cool blue-gray) */
+  --gray-50: hsl(210, 40%, 98%);
+  --gray-100: hsl(210, 31%, 95%);
+  --gray-200: hsl(215, 27%, 91%);
+  --gray-300: hsl(213, 22%, 84%);
+  --gray-400: hsl(215, 13%, 65%);
+  --gray-500: hsl(215, 12%, 47%);
+  --gray-600: hsl(217, 15%, 35%);
+  --gray-700: hsl(216, 21%, 27%);
+  --gray-800: hsl(218, 28%, 17%);
+  --gray-900: hsl(219, 36%, 11%);
+  --gray-950: hsl(220, 37%, 8%);
+
+  /* Error palette (red) */
+  --error-400: hsl(0, 100%, 68%);
+  --error-600: hsl(0, 100%, 58%);
+
+  /* Success palette (green) */
+  --success-500: hsl(152, 77%, 39%);
+  --success-600: hsl(153, 91%, 30%);
+
+  /* Shadcn semantic tokens → design system */
+  --background: var(--base-white);
+  --foreground: var(--gray-900);
+  --card: var(--base-white);
+  --card-foreground: var(--gray-900);
+  --primary: var(--gray-900);
+  --primary-foreground: var(--base-white);
+  --muted: var(--gray-100);
+  --destructive: var(--error-600);
+  --border: var(--gray-300);
+  --input: var(--gray-300);
+  --ring: var(--brand-500);
+
+  /* Additional background tokens */
+  --background-secondary: var(--gray-50);
+  --background-disabled: var(--gray-100);
+
+  /* Additional foreground tokens */
+  --foreground-secondary: var(--gray-700);
+  --foreground-tertiary: var(--gray-600);
+  --foreground-quaternary: var(--gray-500);
+
+  /* Additional border tokens */
+  --border-secondary: var(--gray-200);
+
+  /* Status semantic tokens */
+  --success-foreground: var(--success-600);
+
+  /* Shadow tokens */
+  --shadow-tooltip:
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03),
+    0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+  --shadow-input: inset 0px 0px 16px 4px hsla(44, 93%, 47%, 0.08);
+
+  /* Border radius base (shadcn compat) */
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Gray palette (warm dark) */
+  --gray-50: hsl(60, 9%, 98%);
+  --gray-100: hsl(60, 5%, 96%);
+  --gray-200: hsl(20, 6%, 90%);
+  --gray-300: hsl(26, 8%, 83%);
+  --gray-400: hsl(25, 7%, 64%);
+  --gray-500: hsl(26, 6%, 45%);
+  --gray-600: hsl(33, 5%, 32%);
+  --gray-700: hsl(30, 6%, 25%);
+  --gray-800: hsl(12, 6%, 15%);
+  --gray-900: hsl(24, 10%, 10%);
+  --gray-950: hsl(24, 12%, 8%);
+
+  /* Shadcn semantic tokens (dark) */
+  --background: var(--gray-950);
+  --foreground: var(--base-white);
+  --card: var(--gray-900);
+  --card-foreground: var(--base-white);
+  --primary: var(--gray-50);
+  --primary-foreground: var(--gray-900);
+  --muted: var(--gray-800);
+  --destructive: var(--error-400);
+  --border: var(--gray-700);
+  --input: var(--gray-700);
+  --ring: var(--brand-500);
+
+  /* Additional background tokens (dark) */
+  --background-secondary: var(--gray-900);
+  --background-disabled: var(--gray-800);
+
+  /* Additional foreground tokens (dark) */
+  --foreground-secondary: var(--gray-300);
+  --foreground-tertiary: var(--gray-400);
+  --foreground-quaternary: var(--gray-400);
+
+  /* Additional border tokens (dark) */
+  --border-secondary: var(--gray-800);
+
+  /* Status semantic tokens (dark) */
+  --success-foreground: var(--success-500);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@utility text-brand-gradient {
+  background: linear-gradient(
+    to right,
+    var(--brand-300),
+    var(--brand-500),
+    var(--brand-600)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility footer-line-gradient {
+  background-image: linear-gradient(
+    270deg,
+    transparent 20%,
+    var(--border) 40%,
+    var(--border) 60%,
+    transparent 80%
+  );
+}

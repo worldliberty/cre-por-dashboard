@@ -1,0 +1,36 @@
+output:
+  - execution
+  - failure
+
+pre-commit:
+  piped: true
+  jobs:
+    - name: Install
+      run: pnpm install
+    - name: Check lockfile
+      run: |
+        if git diff --cached --name-only | grep -qE "(^pnpm-workspace.yaml$|package.json$)" && git diff --name-only | grep -q "^pnpm-lock.yaml$"; then
+          echo "Error: pnpm-workspace.yaml or package.json is staged but pnpm-lock.yaml has unstaged changes."
+          echo "Please stage the updated lockfile."
+          exit 1
+        fi
+    - name: Build
+      run: pnpm build
+    - name: Typecheck & Lint
+      group:
+        parallel: true
+        jobs:
+          - run: pnpm exec tsc --noEmit
+          - run: pnpm lint
+post-checkout:
+  commands:
+    install:
+      run: echo "Don't forget to run 'pnpm install' after checking out a new branch"
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit
+pre-push:
+  commands:
+    build:
+      run: pnpm build
