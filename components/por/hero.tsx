@@ -31,7 +31,7 @@ export function Hero({ reserves, fetchTime, isLoading, isError }: HeroProps) {
       )}
 
       <p className="text-sm text-foreground-tertiary">
-        {fetchTime ? `Last updated: ${fetchTime}` : 'Loading...'}
+        {fetchTime ? `Last refresh: ${fetchTime}` : 'Loading...'}
       </p>
     </section>
   );
