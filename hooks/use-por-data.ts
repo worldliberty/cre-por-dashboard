@@ -2,7 +2,6 @@
 
 import { decodeAbiParameters } from 'viem';
 import { useBlockNumber, useReadContracts } from 'wagmi';
-
 import {
   POR_ORACLE_ADDRESS,
   porOracleAbi,
@@ -43,6 +42,7 @@ export function usePorData() {
 
   const [bundleResult, decimalsResult] = data ?? [];
 
+  const bundleFailed = bundleResult?.status === 'failure';
   const bundle = bundleResult?.result;
   const bundleDecimals = decimalsResult?.result;
 
@@ -50,6 +50,8 @@ export function usePorData() {
   const decimals = bundleDecimals?.[0] ?? RESERVES_DECIMALS;
   const reservesRaw = decoded?.reserves ?? 0n;
   const reserves = Number(reservesRaw) / 10 ** decimals;
+
+  const hasError = isError || bundleFailed;
 
   return {
     reserves,
@@ -61,7 +63,7 @@ export function usePorData() {
       ? new Date(dataUpdatedAt).toLocaleTimeString()
       : '',
     isLoading,
-    isError,
+    isError: hasError,
     refetch,
   };
 }

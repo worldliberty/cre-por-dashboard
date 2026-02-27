@@ -33,8 +33,10 @@ export interface Usd1SupplyData {
   totalSupplyFormatted: string;
   totalRawSupply: string;
   isLoading: boolean;
+  isAllSettled: boolean;
   isAllError: boolean;
   hasPartialError: boolean;
+  erroredChains: string[];
   successCount: number;
   dataUpdatedAt: number | null;
   refetch: () => void;
@@ -158,7 +160,9 @@ export function useUsd1Supply(): Usd1SupplyData {
     return sum + c.rawSupply * scale;
   }, 0n);
   const successCount = successfulChains.length;
-  const errorCount = chains.filter((c) => c.isError).length;
+  const erroredChainEntries = chains.filter((c) => c.isError);
+  const errorCount = erroredChainEntries.length;
+  const isAllSettled = chains.every((c) => !c.isLoading);
 
   // Latch: once we've received data, never show loading skeletons again
   const hasLoaded = useRef(false);
@@ -178,8 +182,10 @@ export function useUsd1Supply(): Usd1SupplyData {
     totalSupplyFormatted: formatSupply(totalSupply),
     totalRawSupply: totalRawSupply > 0n ? totalRawSupply.toLocaleString() : '',
     isLoading: !hasLoaded.current,
+    isAllSettled,
     isAllError: errorCount === chains.length,
     hasPartialError: errorCount > 0 && successCount > 0,
+    erroredChains: erroredChainEntries.map((c) => c.label),
     successCount,
     dataUpdatedAt,
     refetch: () => {

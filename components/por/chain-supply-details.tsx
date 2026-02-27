@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Copy, ExternalLink } from 'lucide-react';
+import { Check, Copy, ExternalLink, TriangleAlertIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -49,15 +49,20 @@ function ChainRow({ chainSupply }: { chainSupply: ChainSupply }) {
       {/* Left: chain label + supply */}
       <div className="min-w-0">
         <p className="text-sm text-foreground-tertiary">{chainSupply.label}</p>
-        <p className="mt-0.5 text-sm font-medium text-foreground">
-          {chainSupply.isLoading ? (
-            <span className="inline-block h-4 w-32 animate-pulse rounded bg-foreground/10" />
-          ) : chainSupply.supply != null ? (
-            `${formatSupply(chainSupply.supply)} USD1`
-          ) : (
-            '—'
-          )}
-        </p>
+        {chainSupply.isLoading ? (
+          <span className="mt-0.5 inline-block h-4 w-32 animate-pulse rounded bg-foreground/10" />
+        ) : chainSupply.isError ? (
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm font-medium text-destructive">
+            <TriangleAlertIcon className="size-3.5 shrink-0" />
+            Failed to fetch
+          </p>
+        ) : chainSupply.supply != null ? (
+          <p className="mt-0.5 text-sm font-medium text-foreground">
+            {formatSupply(chainSupply.supply)} USD1
+          </p>
+        ) : (
+          <p className="mt-0.5 text-sm font-medium text-foreground">—</p>
+        )}
       </div>
 
       {/* Right: token address (truncated, copyable) + explorer link */}
