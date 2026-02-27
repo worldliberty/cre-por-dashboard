@@ -14,6 +14,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -83,6 +84,7 @@
   --primary: var(--gray-900);
   --primary-foreground: var(--base-white);
   --muted: var(--gray-100);
+  --muted-foreground: var(--gray-500);
   --destructive: var(--error-600);
   --border: var(--gray-300);
   --input: var(--gray-300);
@@ -135,6 +137,7 @@
   --primary: var(--gray-50);
   --primary-foreground: var(--gray-900);
   --muted: var(--gray-800);
+  --muted-foreground: var(--gray-400);
   --destructive: var(--error-400);
   --border: var(--gray-700);
   --input: var(--gray-700);

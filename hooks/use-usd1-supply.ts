@@ -1,7 +1,8 @@
 'use client';
 
 import { useQueries } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useAtomValue } from 'jotai';
+import { useCallback, useRef } from 'react';
 import { erc20Abi, formatUnits } from 'viem';
 import { useReadContracts } from 'wagmi';
 import { bsc, mainnet } from 'wagmi/chains';
@@ -14,6 +15,7 @@ import {
 import { fetchAptosTotalSupply } from '@/lib/fetchers/aptos';
 import { fetchSolanaTotalSupply } from '@/lib/fetchers/solana';
 import { fetchTronTotalSupply } from '@/lib/fetchers/tron';
+import { customRpcsAtom } from '@/lib/store/rpc';
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -33,6 +35,7 @@ export interface Usd1SupplyData {
   totalSupplyFormatted: string;
   totalRawSupply: string;
   isLoading: boolean;
+  isFetching: boolean;
   isAllSettled: boolean;
   isAllError: boolean;
   hasPartialError: boolean;
@@ -70,7 +73,7 @@ const evmContracts = [
 
 // ── Non-EVM query definitions ────────────────────────────────────────
 
-const nonEvmQueries = [
+const nonEvmChains = [
   { chain: 'tron' as const, fn: fetchTronTotalSupply },
   { chain: 'solana' as const, fn: fetchSolanaTotalSupply },
   { chain: 'aptos' as const, fn: fetchAptosTotalSupply },
@@ -79,6 +82,8 @@ const nonEvmQueries = [
 // ── Hook ─────────────────────────────────────────────────────────────
 
 export function useUsd1Supply(): Usd1SupplyData {
+  const customRpcs = useAtomValue(customRpcsAtom);
+
   // EVM chains via wagmi
   const evm = useReadContracts({
     contracts: evmContracts,
@@ -87,9 +92,9 @@ export function useUsd1Supply(): Usd1SupplyData {
 
   // Non-EVM chains via react-query
   const nonEvm = useQueries({
-    queries: nonEvmQueries.map(({ chain, fn }) => ({
-      queryKey: ['usd1-supply', chain],
-      queryFn: fn,
+    queries: nonEvmChains.map(({ chain, fn }) => ({
+      queryKey: ['usd1-supply', chain, customRpcs[chain]],
+      queryFn: () => fn(customRpcs[chain]),
       refetchInterval: SUPPLY_REFRESH_INTERVAL,
       retry: 2,
       staleTime: 30_000,
@@ -117,7 +122,7 @@ export function useUsd1Supply(): Usd1SupplyData {
     };
   });
 
-  const nonEvmResults: ChainSupply[] = nonEvmQueries.map(({ chain }, i) => {
+  const nonEvmResults: ChainSupply[] = nonEvmChains.map(({ chain }, i) => {
     const q = nonEvm[i];
     if (!q)
       return {
@@ -176,21 +181,26 @@ export function useUsd1Supply(): Usd1SupplyData {
   ];
   const dataUpdatedAt = allTimes.length > 0 ? Math.max(...allTimes) : null;
 
+  const refetchRef = useRef(() => {});
+  refetchRef.current = () => {
+    evm.refetch();
+    for (const q of nonEvm) q.refetch();
+  };
+  const refetchAll = useCallback(() => refetchRef.current(), []);
+
   return {
     chains,
     totalSupply,
     totalSupplyFormatted: formatSupply(totalSupply),
     totalRawSupply: totalRawSupply > 0n ? totalRawSupply.toLocaleString() : '',
     isLoading: !hasLoaded.current,
+    isFetching: evm.isFetching || nonEvm.some((q) => q.isFetching),
     isAllSettled,
     isAllError: errorCount === chains.length,
     hasPartialError: errorCount > 0 && successCount > 0,
     erroredChains: erroredChainEntries.map((c) => c.label),
     successCount,
     dataUpdatedAt,
-    refetch: () => {
-      evm.refetch();
-      for (const q of nonEvm) q.refetch();
-    },
+    refetch: refetchAll,
   };
 }

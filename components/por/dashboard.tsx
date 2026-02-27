@@ -7,8 +7,13 @@ import { Header } from '@/components/por/header';
 import { Hero } from '@/components/por/hero';
 import { StatsGrid } from '@/components/por/stats-grid';
 import { WarningBanner } from '@/components/por/supply-warning-banner';
+import { useCallback } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 import { usePorData } from '@/hooks/use-por-data';
 import { useUsd1Supply } from '@/hooks/use-usd1-supply';
+
+const DEBOUNCE_DELAY = 1_000; // 1 second
+const DEBOUNCE_OPTIONS = { leading: true, trailing: false } as const;
 
 export function PorDashboard() {
   const {
@@ -19,6 +24,7 @@ export function PorDashboard() {
     bundleTimestamp,
     fetchTime,
     isLoading,
+    isFetching,
     isError,
     refetch,
   } = usePorData();
@@ -29,12 +35,23 @@ export function PorDashboard() {
     totalSupplyFormatted,
     totalRawSupply,
     isLoading: supplyLoading,
+    isFetching: supplyFetching,
     isAllSettled,
     hasPartialError,
     isAllError,
     erroredChains,
     refetch: refetchSupply,
   } = useUsd1Supply();
+
+  const refresh = useCallback(() => {
+    refetch();
+    refetchSupply();
+  }, [refetch, refetchSupply]);
+  const debouncedRefresh = useDebounceCallback(
+    refresh,
+    DEBOUNCE_DELAY,
+    DEBOUNCE_OPTIONS,
+  );
 
   const supplyError = hasPartialError || isAllError;
   const reservesError = isError;
@@ -49,11 +66,8 @@ export function PorDashboard() {
   return (
     <div className="flex min-h-dvh flex-col">
       <Header
-        onRefresh={() => {
-          refetch();
-          refetchSupply();
-        }}
-        isLoading={isLoading || supplyLoading}
+        onRefresh={debouncedRefresh}
+        isLoading={isLoading || supplyLoading || isFetching || supplyFetching}
       />
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 md:gap-8 md:px-6 xl:px-0 mb-20">
         <Hero

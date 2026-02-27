@@ -28,7 +28,7 @@ function decodeBundleBytes(bundle: `0x${string}`) {
 export function usePorData() {
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  const { data, isLoading, isError, refetch, dataUpdatedAt } = useReadContracts(
+  const { data, isLoading, isFetching, isError, refetch, dataUpdatedAt } = useReadContracts(
     {
       contracts: [
         { ...porContract, functionName: 'latestBundle' },
@@ -63,6 +63,7 @@ export function usePorData() {
       ? new Date(dataUpdatedAt).toLocaleTimeString()
       : '',
     isLoading,
+    isFetching,
     isError: hasError,
     refetch,
   };

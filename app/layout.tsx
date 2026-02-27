@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Sora } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import type { ReactNode } from 'react';
-
+import { StoreProvider } from '@/components/providers/store';
 import { ThemeProvider } from '@/components/providers/theme';
 import { Web3Provider } from '@/components/providers/wagmi';
 import { siteConfig } from '@/lib/config/site';
@@ -116,7 +116,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextTopLoader color="var(--brand-600)" showSpinner={false} />
-          <Web3Provider>{children}</Web3Provider>
+          <StoreProvider>
+            <Web3Provider>{children}</Web3Provider>
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

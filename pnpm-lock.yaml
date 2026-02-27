@@ -49,6 +49,9 @@ catalogs:
       specifier: 19.2.3
       version: 19.2.3
   ui:
+    '@hookform/resolvers':
+      specifier: 5.2.2
+      version: 5.2.2
     '@tanstack/react-query':
       specifier: 5.90.21
       version: 5.90.21
@@ -58,6 +61,9 @@ catalogs:
     clsx:
       specifier: 2.1.1
       version: 2.1.1
+    jotai:
+      specifier: 2.18.0
+      version: 2.18.0
     lucide-react:
       specifier: 0.575.0
       version: 0.575.0
@@ -70,12 +76,21 @@ catalogs:
     react-dom:
       specifier: 19.2.4
       version: 19.2.4
+    react-hook-form:
+      specifier: 7.71.2
+      version: 7.71.2
     tailwind-merge:
       specifier: 3.5.0
       version: 3.5.0
     tw-animate-css:
       specifier: 1.4.0
       version: 1.4.0
+    usehooks-ts:
+      specifier: 3.1.1
+      version: 3.1.1
+    zod:
+      specifier: 4.3.6
+      version: 4.3.6
   web3:
     '@aptos-labs/ts-sdk':
       specifier: 6.0.0
@@ -100,6 +115,9 @@ importers:
       '@aptos-labs/ts-sdk':
         specifier: catalog:web3
         version: 6.0.0(got@11.8.6)
+      '@hookform/resolvers':
+        specifier: catalog:ui
+        version: 5.2.2(react-hook-form@7.71.2(react@19.2.4))
       '@solana/kit':
         specifier: catalog:web3
         version: 6.1.0(typescript@5.9.3)
@@ -112,6 +130,9 @@ importers:
       clsx:
         specifier: catalog:ui
         version: 2.1.1
+      jotai:
+        specifier: catalog:ui
+        version: 2.18.0(@types/react@19.2.14)(react@19.2.4)
       lucide-react:
         specifier: catalog:ui
         version: 0.575.0(react@19.2.4)
@@ -133,6 +154,9 @@ importers:
       react-dom:
         specifier: catalog:ui
         version: 19.2.4(react@19.2.4)
+      react-hook-form:
+        specifier: catalog:ui
+        version: 7.71.2(react@19.2.4)
       tailwind-merge:
         specifier: catalog:ui
         version: 3.5.0
@@ -142,12 +166,18 @@ importers:
       tw-animate-css:
         specifier: catalog:ui
         version: 1.4.0
+      usehooks-ts:
+        specifier: catalog:ui
+        version: 3.1.1(react@19.2.4)
       viem:
         specifier: catalog:web3
-        version: 2.46.3(typescript@5.9.3)
+        version: 2.46.3(typescript@5.9.3)(zod@4.3.6)
       wagmi:
         specifier: catalog:web3
-        version: 3.5.0(@tanstack/query-core@5.90.20)(@tanstack/react-query@5.90.21(react@19.2.4))(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3))
+        version: 3.5.0(@tanstack/query-core@5.90.20)(@tanstack/react-query@5.90.21(react@19.2.4))(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))
+      zod:
+        specifier: catalog:ui
+        version: 4.3.6
     devDependencies:
       '@biomejs/biome':
         specifier: catalog:default
@@ -357,6 +387,11 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@hookform/resolvers@5.2.2':
+    resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
+    peerDependencies:
+      react-hook-form: ^7.55.0
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -1673,6 +1708,9 @@ packages:
       typescript:
         optional: true
 
+  '@standard-schema/utils@0.3.0':
+    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
@@ -1787,9 +1825,6 @@ packages:
 
   '@types/node@22.7.5':
     resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
-
-  '@types/node@25.3.0':
-    resolution: {integrity: sha512-4K3bqJpXpqfg2XKGK9bpDTc6xO/xoUP/RBWS7AtRMug6zZFaRekiLzjVtAoZMquxoAbzBvy5nxQ7veS5eYzf8A==}
 
   '@types/node@25.3.2':
     resolution: {integrity: sha512-RpV6r/ij22zRRdyBPcxDeKAzH43phWVKEjL2iksqo1Vz3CuBUrgmPpPhALKiRfU7OMCmeeO9vECBMsV0hMTG8Q==}
@@ -2192,6 +2227,24 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
+  jotai@2.18.0:
+    resolution: {integrity: sha512-XI38kGWAvtxAZ+cwHcTgJsd+kJOJGf3OfL4XYaXWZMZ7IIY8e53abpIHvtVn1eAgJ5dlgwlGFnP4psrZ/vZbtA==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+
   js-base64@3.7.8:
     resolution: {integrity: sha512-hNngCeKxIUQiEUN3GPJOkz4wF/YvdUdbNL9hsBcMQTkKzboD7T/q3OYOuuPZLUE6dBxSGpwhk5mwuDud7JVAow==}
 
@@ -2347,6 +2400,9 @@ packages:
 
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
+
+  lodash.debounce@4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
   lodash.kebabcase@4.1.1:
     resolution: {integrity: sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==}
@@ -2536,6 +2592,12 @@ packages:
     peerDependencies:
       react: ^19.2.4
 
+  react-hook-form@7.71.2:
+    resolution: {integrity: sha512-1CHvcDYzuRUNOflt4MOq3ZM46AronNJtQ1S7tnX6YN4y72qhgiUItpacZUAQ0TyWYci3yz1X+rXaSxiuEm86PA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -2714,6 +2776,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  usehooks-ts@3.1.1:
+    resolution: {integrity: sha512-I4diPp9Cq6ieSUH2wu+fDAVQO43xwtulo+fKEidHUwZPnYImbtkTjzIJYcDcJqxgmX31GVqNFURodvcgHcW0pA==}
+    engines: {node: '>=16.15.0'}
+    peerDependencies:
+      react: ^16.8.0  || ^17 || ^18 || ^19 || ^19.0.0-rc
+
   validator@13.15.23:
     resolution: {integrity: sha512-4yoz1kEWqUjzi5zsPbAS/903QXSYp0UOtHsPpp7p9rHAw/W+dkInskAE386Fat3oKRROwO98d9ZB0G4cObgUyw==}
     engines: {node: '>= 0.10'}
@@ -2791,6 +2859,9 @@ packages:
   yargs@17.7.2:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
+
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
   zustand@5.0.0:
     resolution: {integrity: sha512-LE+VcmbartOPM+auOjCCLQOsQ05zUTp8RkgwRzefUk+2jISdMMFnxvyTjA4YNWr5ZGXYbVsEMZosttuxUBkojQ==}
@@ -3018,6 +3089,11 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
 
   '@floating-ui/utils@0.2.10': {}
+
+  '@hookform/resolvers@5.2.2(react-hook-form@7.71.2(react@19.2.4))':
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.71.2(react@19.2.4)
 
   '@img/colour@1.0.0':
     optional: true
@@ -4412,6 +4488,8 @@ snapshots:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
 
+  '@standard-schema/utils@0.3.0': {}
+
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
@@ -4500,22 +4578,18 @@ snapshots:
     dependencies:
       '@types/http-cache-semantics': 4.2.0
       '@types/keyv': 3.1.4
-      '@types/node': 25.3.0
+      '@types/node': 25.3.2
       '@types/responselike': 1.0.3
 
   '@types/http-cache-semantics@4.2.0': {}
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 25.3.0
+      '@types/node': 25.3.2
 
   '@types/node@22.7.5':
     dependencies:
       undici-types: 6.19.8
-
-  '@types/node@25.3.0':
-    dependencies:
-      undici-types: 7.18.2
 
   '@types/node@25.3.2':
     dependencies:
@@ -4531,24 +4605,24 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 25.3.0
+      '@types/node': 25.3.2
 
-  '@wagmi/connectors@7.2.1(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)))(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3))':
+  '@wagmi/connectors@7.2.1(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)(zod@4.3.6)))(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))':
     dependencies:
-      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3))
-      viem: 2.46.3(typescript@5.9.3)
+      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))
+      viem: 2.46.3(typescript@5.9.3)(zod@4.3.6)
     optionalDependencies:
       typescript: 5.9.3
 
-  '@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3))':
+  '@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))':
     dependencies:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@5.9.3)
-      viem: 2.46.3(typescript@5.9.3)
+      viem: 2.46.3(typescript@5.9.3)(zod@4.3.6)
       zustand: 5.0.0(@types/react@19.2.14)(react@19.2.4)(use-sync-external-store@1.4.0(react@19.2.4))
     optionalDependencies:
       '@tanstack/query-core': 5.90.20
-      ox: 0.12.4(typescript@5.9.3)
+      ox: 0.12.4(typescript@5.9.3)(zod@4.3.6)
       typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/react'
@@ -4556,9 +4630,10 @@ snapshots:
       - react
       - use-sync-external-store
 
-  abitype@1.2.3(typescript@5.9.3):
+  abitype@1.2.3(typescript@5.9.3)(zod@4.3.6):
     optionalDependencies:
       typescript: 5.9.3
+      zod: 4.3.6
 
   aes-js@4.0.0-beta.5: {}
 
@@ -4879,6 +4954,11 @@ snapshots:
 
   jiti@2.6.1: {}
 
+  jotai@2.18.0(@types/react@19.2.14)(react@19.2.4):
+    optionalDependencies:
+      '@types/react': 19.2.14
+      react: 19.2.4
+
   js-base64@3.7.8: {}
 
   js-tokens@4.0.0: {}
@@ -4995,6 +5075,8 @@ snapshots:
 
   lodash.camelcase@4.3.0: {}
 
+  lodash.debounce@4.0.8: {}
+
   lodash.kebabcase@4.1.1: {}
 
   lodash.mergewith@4.6.2: {}
@@ -5090,7 +5172,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  ox@0.12.4(typescript@5.9.3):
+  ox@0.12.4(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
@@ -5098,7 +5180,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3
@@ -5216,6 +5298,10 @@ snapshots:
     dependencies:
       react: 19.2.4
       scheduler: 0.27.0
+
+  react-hook-form@7.71.2(react@19.2.4):
+    dependencies:
+      react: 19.2.4
 
   react-is@16.13.1: {}
 
@@ -5382,17 +5468,22 @@ snapshots:
     dependencies:
       react: 19.2.4
 
+  usehooks-ts@3.1.1(react@19.2.4):
+    dependencies:
+      lodash.debounce: 4.0.8
+      react: 19.2.4
+
   validator@13.15.23: {}
 
-  viem@2.46.3(typescript@5.9.3):
+  viem@2.46.3(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)
       isows: 1.0.7(ws@8.18.3)
-      ox: 0.12.4(typescript@5.9.3)
+      ox: 0.12.4(typescript@5.9.3)(zod@4.3.6)
       ws: 8.18.3
     optionalDependencies:
       typescript: 5.9.3
@@ -5401,14 +5492,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  wagmi@3.5.0(@tanstack/query-core@5.90.20)(@tanstack/react-query@5.90.21(react@19.2.4))(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3)):
+  wagmi@3.5.0(@tanstack/query-core@5.90.20)(@tanstack/react-query@5.90.21(react@19.2.4))(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3)(zod@4.3.6)):
     dependencies:
       '@tanstack/react-query': 5.90.21(react@19.2.4)
-      '@wagmi/connectors': 7.2.1(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)))(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3))
-      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3))
+      '@wagmi/connectors': 7.2.1(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)(zod@4.3.6)))(typescript@5.9.3)(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))
+      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(ox@0.12.4(typescript@5.9.3)(zod@4.3.6))(react@19.2.4)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.4))(viem@2.46.3(typescript@5.9.3)(zod@4.3.6))
       react: 19.2.4
       use-sync-external-store: 1.4.0(react@19.2.4)
-      viem: 2.46.3(typescript@5.9.3)
+      viem: 2.46.3(typescript@5.9.3)(zod@4.3.6)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -5451,6 +5542,8 @@ snapshots:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 21.1.1
+
+  zod@4.3.6: {}
 
   zustand@5.0.0(@types/react@19.2.14)(react@19.2.4)(use-sync-external-store@1.4.0(react@19.2.4)):
     optionalDependencies:

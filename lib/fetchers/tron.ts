@@ -13,11 +13,13 @@ const TOTAL_SUPPLY_ABI = [
   },
 ];
 
-export async function fetchTronTotalSupply(): Promise<bigint> {
+export async function fetchTronTotalSupply(
+  customRpcs: string[] = [],
+): Promise<bigint> {
   const hexAddress = TronWeb.address.toHex(TRON_CONFIG.address);
   let lastError: unknown;
 
-  for (const url of TRON_CONFIG.rpcs) {
+  for (const url of [...customRpcs, ...TRON_CONFIG.rpcs]) {
     try {
       const tronWeb = new TronWeb({ fullHost: url });
       tronWeb.setAddress(TRON_CONFIG.address);

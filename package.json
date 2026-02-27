@@ -14,10 +14,12 @@
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "catalog:web3",
+    "@hookform/resolvers": "catalog:ui",
     "@solana/kit": "catalog:web3",
     "@tanstack/react-query": "catalog:ui",
     "class-variance-authority": "catalog:ui",
     "clsx": "catalog:ui",
+    "jotai": "catalog:ui",
     "lucide-react": "catalog:ui",
     "next": "catalog:nextjs",
     "next-themes": "catalog:nextjs",
@@ -25,11 +27,14 @@
     "radix-ui": "catalog:ui",
     "react": "catalog:ui",
     "react-dom": "catalog:ui",
+    "react-hook-form": "catalog:ui",
     "tailwind-merge": "catalog:ui",
     "tronweb": "catalog:web3",
     "tw-animate-css": "catalog:ui",
+    "usehooks-ts": "catalog:ui",
     "viem": "catalog:web3",
-    "wagmi": "catalog:web3"
+    "wagmi": "catalog:web3",
+    "zod": "catalog:ui"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:default",

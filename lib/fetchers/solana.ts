@@ -4,10 +4,12 @@ import { SOLANA_CONFIG } from '@/lib/contracts/usd1-token';
 
 const mint = address(SOLANA_CONFIG.mint);
 
-export async function fetchSolanaTotalSupply(): Promise<bigint> {
+export async function fetchSolanaTotalSupply(
+  customRpcs: string[] = [],
+): Promise<bigint> {
   let lastError: unknown;
 
-  for (const url of SOLANA_CONFIG.rpcs) {
+  for (const url of [...customRpcs, ...SOLANA_CONFIG.rpcs]) {
     try {
       const rpc = createSolanaRpc(url);
       const { value } = await rpc.getTokenSupply(mint).send();

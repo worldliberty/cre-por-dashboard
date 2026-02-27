@@ -1,10 +1,9 @@
 'use client';
 
-import { RefreshCw } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { Button } from '@/components/ui/button';
+import { RefreshButton } from '@/components/por/refresh-button';
+import { RpcSettingsDialog } from '@/components/por/rpc-settings-dialog';
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -32,7 +31,7 @@ export function Header({ onRefresh, isLoading }: HeaderProps) {
             href="https://github.com/worldliberty/cre-por-dashboard"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-foreground transition-colors hover:text-foreground-secondary"
+            className="inline-flex items-center gap-1.5 text-foreground-secondary transition-colors hover:text-foreground"
           >
             <svg
               role="img"
@@ -47,20 +46,8 @@ export function Header({ onRefresh, isLoading }: HeaderProps) {
               Go to Github
             </span>
           </Link>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="cursor-pointer gap-1.5 text-brand-500 hover:text-brand-600"
-          >
-            <RefreshCw
-              className={`size-5 ${isLoading ? 'animate-spin' : ''}`}
-            />
-            <span className="hidden text-sm font-semibold md:inline">
-              Refresh data
-            </span>
-          </Button>
+          <RpcSettingsDialog />
+          <RefreshButton onClick={onRefresh} isLoading={isLoading} />
         </div>
       </nav>
     </header>
