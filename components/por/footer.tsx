@@ -1,4 +1,3 @@
-import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +12,7 @@ export function Footer() {
       <div className="flex flex-col items-start gap-6 py-10 md:py-12">
         <Image
           alt="World Liberty Financial Logo"
-          className="hidden w-[240px] md:block"
+          className="w-[240px]"
           height={20}
           loading="eager"
           src="/images/logo.svg"
@@ -33,7 +32,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between gap-4 border-t border-border-secondary py-6 md:flex-row">
+      <div className="flex flex-col items-start justify-between gap-4 border-t border-border-secondary py-6 md:flex-row md:items-center">
         <p className="text-sm text-foreground-tertiary">
           &copy; {new Date().getFullYear()} World Liberty Financial LLC
         </p>
@@ -41,10 +40,9 @@ export function Footer() {
           href={siteConfig.links.wlf}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-sm text-foreground-secondary transition-colors hover:text-foreground"
+          className="text-xs text-foreground-secondary transition-colors hover:text-foreground"
         >
           Go to WLFI
-          <ExternalLink className="size-3.5" />
         </Link>
       </div>
     </footer>
