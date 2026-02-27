@@ -17,10 +17,10 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
     img-src * blob: data:;
-    connect-src 'self' *.ankr.com *.publicnode.com *.drpc.org 1rpc.io *.binance.org *.trongrid.io *.tronstack.io *.aptoslabs.com;
+    connect-src 'self' *.ankr.com *.publicnode.com *.drpc.org 1rpc.io *.binance.org *.trongrid.io *.tronstack.io *.aptoslabs.com cloudflareinsights.com;
     font-src 'self' fonts.googleapis.com fonts.gstatic.com;
     frame-src 'self';
     object-src 'none';
