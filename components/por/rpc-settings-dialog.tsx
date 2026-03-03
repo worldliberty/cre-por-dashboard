@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { Plus, Settings, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,6 +27,79 @@ import {
 import { customRpcsAtom } from '@/lib/store/rpc';
 
 const CHAINS = Object.keys(CHAIN_META) as ChainName[];
+
+function RpcChainEditor({
+  chain,
+  control,
+  input,
+  inputError,
+  onInputChange,
+  onAdd,
+  onRemove,
+}: {
+  chain: ChainName;
+  control: ReturnType<typeof useForm<RpcFormValues>>['control'];
+  input: string;
+  inputError: string;
+  onInputChange: (value: string) => void;
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+}) {
+  const urls = useWatch({ control, name: chain });
+
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <Label className="text-foreground-secondary">
+        {CHAIN_META[chain].label}
+      </Label>
+
+      {urls.map((url, index) => (
+        <div key={`${chain}`} className="flex min-w-0 items-center gap-2">
+          <code className="min-w-0 flex-1 truncate rounded-md bg-muted px-2 py-1 text-xs">
+            {url}
+          </code>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => onRemove(index)}
+            className="shrink-0 text-destructive hover:text-destructive"
+          >
+            <Trash2 />
+            <span className="sr-only">Remove</span>
+          </Button>
+        </div>
+      ))}
+
+      <div className="flex items-center gap-2">
+        <Input
+          placeholder="https://..."
+          value={input}
+          onChange={(e) => onInputChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              onAdd();
+            }
+          }}
+          className="flex-1"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="icon-sm"
+          onClick={onAdd}
+          className="shrink-0"
+        >
+          <Plus />
+          <span className="sr-only">Add</span>
+        </Button>
+      </div>
+
+      {inputError && <p className="text-destructive text-xs">{inputError}</p>}
+    </div>
+  );
+}
 
 const emptyInputs = () =>
   Object.fromEntries(CHAINS.map((c) => [c, ''])) as Record<ChainName, string>;
@@ -103,7 +176,8 @@ export function RpcSettingsDialog() {
         <Button
           variant="ghost"
           size="sm"
-          className="cursor-pointer gap-1.5 text-foreground-secondary hover:text-foreground"
+          aria-label="RPC settings"
+          className="cursor-pointer gap-1.5 px-0 w-7 md:w-auto md:px-2.5 text-foreground-secondary hover:text-foreground"
         >
           <Settings className="size-5" />
           <span className="hidden text-sm font-semibold md:inline">
@@ -125,70 +199,20 @@ export function RpcSettingsDialog() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex min-w-0 flex-col gap-5"
           >
-            {CHAINS.map((chain) => {
-              const urls = form.watch(chain);
-              return (
-                <div key={chain} className="flex min-w-0 flex-col gap-2">
-                  <Label className="text-foreground-secondary">
-                    {CHAIN_META[chain].label}
-                  </Label>
-
-                  {urls.map((url, i) => (
-                    <div key={url} className="flex min-w-0 items-center gap-2">
-                      <code className="min-w-0 flex-1 truncate rounded-md bg-muted px-2 py-1 text-xs">
-                        {url}
-                      </code>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => removeRpc(chain, i)}
-                        className="shrink-0 text-destructive hover:text-destructive"
-                      >
-                        <Trash2 />
-                        <span className="sr-only">Remove</span>
-                      </Button>
-                    </div>
-                  ))}
-
-                  <div className="flex items-center gap-2">
-                    <Input
-                      placeholder="https://..."
-                      value={inputs[chain]}
-                      onChange={(e) =>
-                        setInputs((prev) => ({
-                          ...prev,
-                          [chain]: e.target.value,
-                        }))
-                      }
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          addRpc(chain);
-                        }
-                      }}
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      onClick={() => addRpc(chain)}
-                      className="shrink-0"
-                    >
-                      <Plus />
-                      <span className="sr-only">Add</span>
-                    </Button>
-                  </div>
-
-                  {inputErrors[chain] && (
-                    <p className="text-destructive text-xs">
-                      {inputErrors[chain]}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+            {CHAINS.map((chain) => (
+              <RpcChainEditor
+                key={chain}
+                chain={chain}
+                control={form.control}
+                input={inputs[chain]}
+                inputError={inputErrors[chain]}
+                onInputChange={(value) =>
+                  setInputs((prev) => ({ ...prev, [chain]: value }))
+                }
+                onAdd={() => addRpc(chain)}
+                onRemove={(index) => removeRpc(chain, index)}
+              />
+            ))}
 
             <DialogFooter>
               <Button

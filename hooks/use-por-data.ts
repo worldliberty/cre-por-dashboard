@@ -28,8 +28,8 @@ function decodeBundleBytes(bundle: `0x${string}`) {
 export function usePorData() {
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  const { data, isLoading, isFetching, isError, refetch, dataUpdatedAt } = useReadContracts(
-    {
+  const { data, isLoading, isFetching, isError, refetch, dataUpdatedAt } =
+    useReadContracts({
       contracts: [
         { ...porContract, functionName: 'latestBundle' },
         { ...porContract, functionName: 'bundleDecimals' },
@@ -37,8 +37,7 @@ export function usePorData() {
       query: {
         refetchInterval: REFRESH_INTERVAL,
       },
-    },
-  );
+    });
 
   const [bundleResult, decimalsResult] = data ?? [];
 

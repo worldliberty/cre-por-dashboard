@@ -16,6 +16,7 @@ const TOTAL_SUPPLY_ABI = [
 export async function fetchTronTotalSupply(
   customRpcs: string[] = [],
 ): Promise<bigint> {
+  // TronWeb.contract() requires hex address; convert from Base58Check
   const hexAddress = TronWeb.address.toHex(TRON_CONFIG.address);
   let lastError: unknown;
 
@@ -34,5 +35,7 @@ export async function fetchTronTotalSupply(
     }
   }
 
-  throw lastError;
+  throw lastError instanceof Error
+    ? lastError
+    : new Error('All RPCs failed for Tron');
 }

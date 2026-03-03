@@ -1,14 +1,14 @@
 'use client';
 
-import { ChainSupplyDetails } from '@/components/por/chain-supply-details';
+import { useCallback } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 import { ContractDetails } from '@/components/por/contract-details';
 import { Footer } from '@/components/por/footer';
 import { Header } from '@/components/por/header';
 import { Hero } from '@/components/por/hero';
 import { StatsGrid } from '@/components/por/stats-grid';
-import { WarningBanner } from '@/components/por/supply-warning-banner';
-import { useCallback } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
+import { ChainSupplyDetails } from '@/components/por/supply-table/details';
+import { WarningBanner } from '@/components/por/warning-banner';
 import { usePorData } from '@/hooks/use-por-data';
 import { useUsd1Supply } from '@/hooks/use-usd1-supply';
 
@@ -30,14 +30,15 @@ export function PorDashboard() {
   } = usePorData();
 
   const {
-    chains,
+    nativeChains,
+    bridgedChains,
     totalSupply,
     totalSupplyFormatted,
-    totalRawSupply,
     isLoading: supplyLoading,
     isFetching: supplyFetching,
     isAllSettled,
     hasPartialError,
+    hasNativeError,
     isAllError,
     erroredChains,
     refetch: refetchSupply,
@@ -53,7 +54,10 @@ export function PorDashboard() {
     DEBOUNCE_OPTIONS,
   );
 
-  const supplyError = hasPartialError || isAllError;
+  // Only native chain errors affect the collateralization ratio (bridged chains
+  // are excluded from the denominator). Use hasPartialError for warning banners
+  // since users should still know about bridged chain failures.
+  const supplyError = hasNativeError || isAllError;
   const reservesError = isError;
   const allReady = isAllSettled && !isLoading;
   const hasAnyError = supplyError || reservesError;
@@ -82,12 +86,14 @@ export function PorDashboard() {
             refetch={refetch}
           />
         )}
-        {allReady && supplyError && (
+        {allReady && (hasPartialError || isAllError) && (
           <WarningBanner
             message={
               isAllError
                 ? 'All supply RPCs failed — collateralization ratio is unavailable.'
-                : `Failed to fetch supply from ${erroredChains.join(', ')} — collateralization ratio is unavailable.`
+                : supplyError
+                  ? `Failed to fetch supply from ${erroredChains.join(', ')} — collateralization ratio may be affected.`
+                  : `Failed to fetch supply from ${erroredChains.join(', ')} (bridged only — ratio unaffected).`
             }
             refetch={refetchSupply}
           />
@@ -106,7 +112,10 @@ export function PorDashboard() {
           bundleTimestamp={bundleTimestamp}
           fetchTime={fetchTime}
         />
-        <ChainSupplyDetails chains={chains} totalRawSupply={totalRawSupply} />
+        <ChainSupplyDetails
+          nativeChains={nativeChains}
+          bridgedChains={bridgedChains}
+        />
       </main>
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6 xl:px-0">
         <Footer />

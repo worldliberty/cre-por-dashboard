@@ -2,9 +2,13 @@ import type { Metadata, Viewport } from 'next';
 import { Sora } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import type { ReactNode } from 'react';
+import { Suspense } from 'react';
+import { CookieConsent } from '@/components/por/cookie-consent';
 import { StoreProvider } from '@/components/providers/store';
 import { ThemeProvider } from '@/components/providers/theme';
 import { Web3Provider } from '@/components/providers/wagmi';
+import { Analytics } from '@/lib/analytics/analytics';
+import { PageView } from '@/lib/analytics/page-view';
 import { siteConfig } from '@/lib/config/site';
 
 import './globals.css';
@@ -118,6 +122,11 @@ export default function RootLayout({
           <NextTopLoader color="var(--brand-600)" showSpinner={false} />
           <StoreProvider>
             <Web3Provider>{children}</Web3Provider>
+            <Suspense fallback={null}>
+              <Analytics />
+              <PageView />
+              <CookieConsent />
+            </Suspense>
           </StoreProvider>
         </ThemeProvider>
       </body>

@@ -4,6 +4,12 @@ import type { SyncStorage } from 'jotai/vanilla/utils/atomWithStorage';
 import type { ChainName } from '@/lib/contracts/usd1-token';
 import { customRpcsSchema } from '@/lib/schemas/rpc';
 
+// ⚠️ Trust model: custom RPCs are user-provided and could return incorrect
+// supply data (e.g., a malicious RPC reporting inflated balances). URL
+// validation (via rpcUrlSchema) prevents scheme-injection attacks, but cannot
+// guard against a dishonest node. This is an accepted trade-off — power users
+// who add custom RPCs are assumed to trust the endpoints they configure.
+
 export type CustomRpcs = Record<ChainName, string[]>;
 
 const DEFAULT_CUSTOM_RPCS: CustomRpcs = {
@@ -12,6 +18,11 @@ const DEFAULT_CUSTOM_RPCS: CustomRpcs = {
   tron: [],
   solana: [],
   aptos: [],
+  plume: [],
+  ab: [],
+  monad: [],
+  mantle: [],
+  morph: [],
 };
 
 const validatedStorage: SyncStorage<CustomRpcs> = {
@@ -20,7 +31,8 @@ const validatedStorage: SyncStorage<CustomRpcs> = {
       const raw = localStorage.getItem(key);
       if (raw === null) return initialValue;
       const parsed = JSON.parse(raw);
-      const result = customRpcsSchema.safeParse(parsed);
+      const merged = { ...DEFAULT_CUSTOM_RPCS, ...parsed };
+      const result = customRpcsSchema.safeParse(merged);
       return result.success ? result.data : initialValue;
     } catch {
       return initialValue;

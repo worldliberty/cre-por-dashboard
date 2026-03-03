@@ -16,7 +16,8 @@ export function RefreshButton({ onClick, isLoading }: RefreshButtonProps) {
       size="sm"
       onClick={onClick}
       disabled={isLoading}
-      className="cursor-pointer gap-1.5 text-brand-500 hover:text-brand-600"
+      aria-label="Refresh data"
+      className="cursor-pointer gap-1.5 px-0 w-7 md:w-auto md:px-2.5 text-brand-500 hover:text-brand-600"
     >
       <RefreshCw className={`size-5 ${isLoading ? 'animate-spin' : ''}`} />
       <span className="hidden text-sm font-semibold md:inline">

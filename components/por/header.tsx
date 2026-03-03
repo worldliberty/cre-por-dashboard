@@ -26,7 +26,7 @@ export function Header({ onRefresh, isLoading }: HeaderProps) {
             Proof of Reserves
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <Link
             href="https://github.com/worldliberty/cre-por-dashboard"
             target="_blank"

@@ -17,10 +17,10 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' static.cloudflareinsights.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' static.cloudflareinsights.com *.googletagmanager.com *.google-analytics.com;
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
     img-src * blob: data:;
-    connect-src 'self' https: cloudflareinsights.com;
+    connect-src 'self' https: cloudflareinsights.com *.google-analytics.com *.googletagmanager.com;
     font-src 'self' fonts.googleapis.com fonts.gstatic.com;
     frame-src 'self';
     object-src 'none';

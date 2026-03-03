@@ -1,46 +1,67 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 
-import { APTOS_CONFIG } from '@/lib/contracts/usd1-token';
+import { APTOS_CONFIG, CCIP_POOL_ADDRESSES } from '@/lib/contracts/usd1-token';
 
-export async function fetchAptosTotalSupply(
-  customRpcs: string[] = [],
-): Promise<bigint> {
+async function withAptosFallback<T>(
+  customRpcs: string[],
+  query: (aptos: Aptos) => Promise<T>,
+): Promise<T> {
   let lastError: unknown;
 
-  // Try custom RPCs first
   for (const url of customRpcs) {
     try {
       const aptos = new Aptos(
         new AptosConfig({ network: Network.MAINNET, fullnode: url }),
       );
-      const metadata = await aptos.getFungibleAssetMetadataByAssetType({
-        assetType: APTOS_CONFIG.metadata,
-      });
-
-      if (!metadata) throw new Error('Aptos fungible asset metadata not found');
-      if (metadata.supply_v2 == null)
-        throw new Error('Missing Aptos supply_v2');
-
-      return BigInt(metadata.supply_v2);
+      return await query(aptos);
     } catch (err) {
       lastError = err;
     }
   }
 
-  // Fall back to SDK default
   try {
     const aptos = new Aptos(new AptosConfig({ network: Network.MAINNET }));
-    const metadata = await aptos.getFungibleAssetMetadataByAssetType({
-      assetType: APTOS_CONFIG.metadata,
-    });
-
-    if (!metadata) throw new Error('Aptos fungible asset metadata not found');
-    if (metadata.supply_v2 == null) throw new Error('Missing Aptos supply_v2');
-
-    return BigInt(metadata.supply_v2);
+    return await query(aptos);
   } catch (err) {
     lastError = err;
   }
 
-  throw lastError;
+  throw lastError instanceof Error
+    ? lastError
+    : new Error('All RPCs failed for Aptos');
+}
+
+export function fetchAptosTotalSupply(
+  customRpcs: string[] = [],
+): Promise<bigint> {
+  return withAptosFallback(customRpcs, async (aptos) => {
+    const metadata = await aptos.getFungibleAssetMetadataByAssetType({
+      assetType: APTOS_CONFIG.metadata,
+    });
+    if (!metadata) throw new Error('Aptos fungible asset metadata not found');
+    if (metadata.supply_v2 == null) throw new Error('Missing Aptos supply_v2');
+    return BigInt(metadata.supply_v2);
+  });
+}
+
+export function fetchAptosPoolBalance(
+  customRpcs: string[] = [],
+): Promise<bigint> {
+  return withAptosFallback(customRpcs, async (aptos) => {
+    const balances = await aptos.getCurrentFungibleAssetBalances({
+      options: {
+        where: {
+          owner_address: { _eq: CCIP_POOL_ADDRESSES.aptos },
+          asset_type: { _eq: APTOS_CONFIG.metadata },
+        },
+      },
+    });
+
+    const [balance] = balances;
+
+    if (!balance || balance.amount === null)
+      throw new Error('Aptos pool balance not found');
+
+    return BigInt(balance.amount);
+  });
 }

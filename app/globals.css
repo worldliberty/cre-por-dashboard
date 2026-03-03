@@ -16,6 +16,10 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -89,6 +93,10 @@
   --border: var(--gray-300);
   --input: var(--gray-300);
   --ring: var(--brand-500);
+  --popover: var(--base-white);
+  --popover-foreground: var(--gray-900);
+  --accent: var(--gray-100);
+  --accent-foreground: var(--gray-900);
 
   /* Additional background tokens */
   --background-secondary: var(--gray-50);
@@ -142,6 +150,10 @@
   --border: var(--gray-700);
   --input: var(--gray-700);
   --ring: var(--brand-500);
+  --popover: var(--gray-900);
+  --popover-foreground: var(--base-white);
+  --accent: var(--gray-800);
+  --accent-foreground: var(--base-white);
 
   /* Additional background tokens (dark) */
   --background-secondary: var(--gray-900);
