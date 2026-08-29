@@ -90,7 +90,7 @@ export function LockedInPoolValue({ chain }: { chain: ChainSupply }) {
       </span>
     );
 
-  if (chain.lockedInPool != null && chain.lockedInPool !== 0)
+  if (chain.lockedInPool && chain.lockedInPool !== 0)
     return (
       <span className="text-sm font-medium text-foreground tabular-nums">
         {formatSupply(chain.lockedInPool)}

@@ -23,6 +23,7 @@ const DEFAULT_CUSTOM_RPCS: CustomRpcs = {
   monad: [],
   mantle: [],
   morph: [],
+  tempo: [],
 };
 
 const validatedStorage: SyncStorage<CustomRpcs> = {

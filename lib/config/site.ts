@@ -1,6 +1,7 @@
 const CDN_HOST = 'static.worldlibertyfinancial.com';
 const cdnUrl = `https://${CDN_HOST}`;
 const ogImage = `${cdnUrl}/images/open-graph/por.jpg`;
+const mainWebsite = 'https://worldlibertyfinancial.com';
 
 export const siteConfig = {
   name: 'USD1',
@@ -23,7 +24,7 @@ export const siteConfig = {
   authors: [
     {
       name: 'World Liberty Financial',
-      url: 'https://worldlibertyfinancial.com',
+      url: mainWebsite,
     },
   ],
   openGraph: {
@@ -51,7 +52,10 @@ export const siteConfig = {
     site: '@worldlibertyfi',
     images: [ogImage],
   },
+  routes: {
+    usd1AttestationReports: `${mainWebsite}/usd1/attestation-reports`,
+  },
   links: {
-    wlf: 'https://worldlibertyfinancial.com',
+    wlf: mainWebsite,
   },
 };

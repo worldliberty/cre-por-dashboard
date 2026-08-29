@@ -1,13 +1,12 @@
 'use client';
 
-import type { SortingState, VisibilityState } from '@tanstack/react-table';
-import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+import type {
+  ColumnVisibilityState,
+  SortingState,
 } from '@tanstack/react-table';
+import { flexRender, useTable } from '@tanstack/react-table';
 import { columns } from '@/components/por/supply-table/columns';
+import { supplyTableFeatures } from '@/components/por/supply-table/table-features';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -31,14 +30,13 @@ export function DesktopTable({
   data: ChainSupply[];
   sorting: SortingState;
   onSortingChange: (sorting: SortingState) => void;
-  columnVisibility: VisibilityState;
-  onColumnVisibilityChange: (visibility: VisibilityState) => void;
+  columnVisibility: ColumnVisibilityState;
+  onColumnVisibilityChange: (visibility: ColumnVisibilityState) => void;
 }) {
-  const table = useReactTable({
+  const table = useTable({
+    features: supplyTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     state: { sorting, columnVisibility },
     onSortingChange: (updater) => {
       const next = typeof updater === 'function' ? updater(sorting) : updater;

@@ -40,5 +40,5 @@ function FormattedNumber({
   );
 }
 
-export { FormattedNumber };
 export type { FormattedNumberProps };
+export { FormattedNumber };

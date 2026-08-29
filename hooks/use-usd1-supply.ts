@@ -4,7 +4,7 @@ import { useQueries } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { erc20Abi, formatUnits } from 'viem';
-import { plumeMainnet } from 'viem/chains';
+import { plumeMainnet, tempo } from 'viem/chains';
 import { useReadContracts } from 'wagmi';
 import { bsc, mainnet, mantle, monad, morph } from 'wagmi/chains';
 import {
@@ -15,6 +15,7 @@ import {
   SUPPLY_REFRESH_INTERVAL,
   USD1_BRIDGED_ADDRESS,
   USD1_EVM_ADDRESS,
+  USD1_TEMPO_ADDRESS,
 } from '@/lib/contracts/usd1-token';
 import {
   fetchAptosPoolBalance,
@@ -80,22 +81,25 @@ function toHuman(raw: bigint, decimals: number): number {
 //
 // [0] totalSupply on Ethereum (native)
 // [1] totalSupply on BSC (native)
-// [2] balanceOf(ETH_POOL) on Ethereum
-// [3] balanceOf(BSC_POOL) on BSC
-// [4] totalSupply on Plume (bridged)
-// [5] totalSupply on AB Core (bridged)
-// [6] totalSupply on Monad (bridged)
-// [7] totalSupply on Mantle (bridged)
-// [8] totalSupply on Morph (bridged)
+// [2] totalSupply on Tempo (native)
+// [3] balanceOf(ETH_POOL) on Ethereum
+// [4] balanceOf(BSC_POOL) on BSC
+// [5] balanceOf(TEMPO_POOL) on Tempo
+// [6] totalSupply on Plume (bridged)
+// [7] totalSupply on AB Core (bridged)
+// [8] totalSupply on Monad (bridged)
+// [9] totalSupply on Mantle (bridged)
+// [10] totalSupply on Morph (bridged)
 
 /** Index offset: native EVM supply entries start at 0 */
 const NATIVE_SUPPLY_OFFSET = 0;
-/** Index offset: CCIP pool balance entries start at 2 */
-const POOL_BALANCE_OFFSET = 2;
-/** Index offset: bridged chain supply entries start at 4 */
-const BRIDGED_SUPPLY_OFFSET = 4;
+/** Index offset: CCIP pool balance entries start at 3 */
+const POOL_BALANCE_OFFSET = 3;
+/** Index offset: bridged chain supply entries start at 6 */
+const BRIDGED_SUPPLY_OFFSET = 6;
 
 const evmContracts = [
+  // ── Native supply (indices 0–2) ──
   {
     address: USD1_EVM_ADDRESS,
     abi: erc20Abi,
@@ -108,6 +112,13 @@ const evmContracts = [
     functionName: 'totalSupply',
     chainId: bsc.id,
   },
+  {
+    address: USD1_TEMPO_ADDRESS,
+    abi: erc20Abi,
+    functionName: 'totalSupply',
+    chainId: tempo.id,
+  },
+  // ── CCIP pool balances (indices 3–5) ──
   {
     address: USD1_EVM_ADDRESS,
     abi: erc20Abi,
@@ -122,6 +133,14 @@ const evmContracts = [
     args: [CCIP_POOL_ADDRESSES.bsc],
     chainId: bsc.id,
   },
+  {
+    address: USD1_TEMPO_ADDRESS,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: [CCIP_POOL_ADDRESSES.tempo],
+    chainId: tempo.id,
+  },
+  // ── Bridged supply (indices 6–10) ──
   {
     address: USD1_BRIDGED_ADDRESS,
     abi: erc20Abi,
@@ -155,11 +174,11 @@ const evmContracts = [
 ] as const;
 
 // Runtime guard: if a contract is inserted or removed, positional indices
-// in nativeEvmResults ([0-1] supply, [2-3] locked) and bridgedResults ([4-8])
+// in nativeEvmResults ([0-2] supply, [3-5] locked) and bridgedResults ([6-10])
 // will silently break. This assertion surfaces the problem immediately.
-if (evmContracts.length !== 9) {
+if (evmContracts.length !== 11) {
   throw new Error(
-    `Expected 9 EVM contracts but found ${evmContracts.length}. ` +
+    `Expected 11 EVM contracts but found ${evmContracts.length}. ` +
       'Update all positional index references when modifying evmContracts.',
   );
 }
@@ -182,7 +201,7 @@ const nonEvmPoolQueries = [
 export function useUsd1Supply(): Usd1SupplyData {
   const customRpcs = useAtomValue(customRpcsAtom);
 
-  // EVM chains via wagmi (9 calls)
+  // EVM chains via wagmi (10 calls)
   const evm = useReadContracts({
     contracts: evmContracts,
     query: { refetchInterval: SUPPLY_REFRESH_INTERVAL },
@@ -212,7 +231,7 @@ export function useUsd1Supply(): Usd1SupplyData {
 
   // ── Build per-chain results ──────────────────────────────────────
 
-  const nativeEvmChainNames: ChainName[] = ['ethereum', 'bsc'];
+  const nativeEvmChainNames: ChainName[] = ['ethereum', 'bsc', 'tempo'];
   const nativeEvmResults: ChainSupply[] = nativeEvmChainNames.map(
     (chain, i) => {
       const supplyResult = evm.data?.at(NATIVE_SUPPLY_OFFSET + i);
@@ -225,10 +244,10 @@ export function useUsd1Supply(): Usd1SupplyData {
       return {
         chain,
         label: meta.label,
-        supply: raw != null ? toHuman(raw, meta.decimals) : null,
+        supply: raw !== undefined ? toHuman(raw, meta.decimals) : null,
         rawSupply: raw ?? null,
         lockedInPool:
-          rawLocked != null ? toHuman(rawLocked, meta.decimals) : null,
+          rawLocked !== undefined ? toHuman(rawLocked, meta.decimals) : null,
         rawLockedInPool: rawLocked ?? null,
         isLoading: evm.isLoading,
         isError,
@@ -241,7 +260,7 @@ export function useUsd1Supply(): Usd1SupplyData {
   const poolBalanceMap = new Map<string, bigint>();
   nonEvmPoolQueries.forEach(({ chain }, i) => {
     const q = nonEvmPools[i];
-    if (q?.data != null) poolBalanceMap.set(chain, q.data);
+    if (q?.data !== undefined) poolBalanceMap.set(chain, q.data);
   });
 
   // Non-EVM chains (tron, solana, aptos)
@@ -265,10 +284,10 @@ export function useUsd1Supply(): Usd1SupplyData {
     return {
       chain,
       label: meta.label,
-      supply: q.data != null ? toHuman(q.data, meta.decimals) : null,
+      supply: q.data !== undefined ? toHuman(q.data, meta.decimals) : null,
       rawSupply: q.data ?? null,
       lockedInPool:
-        rawLocked != null ? toHuman(rawLocked, meta.decimals) : null,
+        rawLocked !== null ? toHuman(rawLocked, meta.decimals) : null,
       rawLockedInPool: rawLocked,
       isLoading: q.isLoading,
       isError: q.isError,
@@ -276,7 +295,7 @@ export function useUsd1Supply(): Usd1SupplyData {
     };
   });
 
-  // Bridged EVM chains: indices [4-8]
+  // Bridged EVM chains: indices [6-10]
   const bridgedChainNames: ChainName[] = [
     'plume',
     'ab',
@@ -293,7 +312,7 @@ export function useUsd1Supply(): Usd1SupplyData {
     return {
       chain,
       label: meta.label,
-      supply: raw != null ? toHuman(raw, meta.decimals) : null,
+      supply: raw !== undefined ? toHuman(raw, meta.decimals) : null,
       rawSupply: raw ?? null,
       lockedInPool: null,
       rawLockedInPool: null,
@@ -312,19 +331,19 @@ export function useUsd1Supply(): Usd1SupplyData {
   // Only native chains count toward total supply. Bridged chain supply is
   // excluded because it is already accounted for — CCIP locks native USD1 on
   // the source chain and mints an equivalent amount on the destination chain.
-  const successfulNative = nativeChains.filter((c) => c.supply != null);
+  const successfulNative = nativeChains.filter((c) => c.supply !== null);
   const totalSupply = successfulNative.reduce(
     (sum, c) => sum + (c.supply ?? 0),
     0,
   );
 
-  const successfulBridged = bridgedChains.filter((c) => c.supply != null);
+  const successfulBridged = bridgedChains.filter((c) => c.supply !== null);
   const totalBridgedSupply = successfulBridged.reduce(
     (sum, c) => sum + (c.supply ?? 0),
     0,
   );
 
-  const successCount = allChains.filter((c) => c.supply != null).length;
+  const successCount = allChains.filter((c) => c.supply !== null).length;
   const erroredChainEntries = allChains.filter((c) => c.isError);
   const errorCount = erroredChainEntries.length;
   const isAllSettled = allChains.every((c) => !c.isLoading);
@@ -359,7 +378,6 @@ export function useUsd1Supply(): Usd1SupplyData {
     totalBridgedSupply,
     totalSupplyFormatted: formatSupply(totalSupply),
     totalBridgedSupplyFormatted: formatSupply(totalBridgedSupply),
-
     isLoading: !hasLoaded.current,
     isFetching:
       evm.isFetching ||

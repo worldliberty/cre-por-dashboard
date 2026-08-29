@@ -1,5 +1,5 @@
 import type { Transport } from 'viem';
-import { plumeMainnet } from 'viem/chains';
+import { plumeMainnet, tempo } from 'viem/chains';
 import { createConfig, fallback, http } from 'wagmi';
 import { bsc, mainnet, mantle, monad, morph } from 'wagmi/chains';
 import { ab } from '@/lib/contracts/usd1-token';
@@ -28,6 +28,8 @@ export const DEFAULT_MANTLE_RPCS = ['https://rpc.mantle.xyz'];
 
 export const DEFAULT_MORPH_RPCS = ['https://rpc.morphl2.io'];
 
+export const DEFAULT_TEMPO_RPCS = ['https://rpc.presto.tempo.xyz'];
+
 const DEFAULT_RPCS: Record<number, string[]> = {
   [mainnet.id]: DEFAULT_ETH_RPCS,
   [bsc.id]: DEFAULT_BSC_RPCS,
@@ -36,6 +38,7 @@ const DEFAULT_RPCS: Record<number, string[]> = {
   [monad.id]: DEFAULT_MONAD_RPCS,
   [mantle.id]: DEFAULT_MANTLE_RPCS,
   [morph.id]: DEFAULT_MORPH_RPCS,
+  [tempo.id]: DEFAULT_TEMPO_RPCS,
 };
 
 const ALL_CHAINS = [
@@ -46,6 +49,7 @@ const ALL_CHAINS = [
   monad,
   mantle,
   morph,
+  tempo,
 ] as const;
 
 function buildTransport(

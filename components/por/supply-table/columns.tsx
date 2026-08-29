@@ -2,7 +2,7 @@
 // via imported components (e.g. Tooltip, CopyAddressButton).
 'use client';
 
-import type { ColumnDef, SortingFn } from '@tanstack/react-table';
+import type { ColumnDef, SortFn } from '@tanstack/react-table';
 import {
   ArrowDown,
   ArrowUp,
@@ -17,6 +17,7 @@ import {
   CopyAddressButton,
   LockedInPoolValue,
 } from '@/components/por/supply-table/cells';
+import type { SupplyTableFeatures } from '@/components/por/supply-table/table-features';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -34,12 +35,12 @@ import { compareSupply, formatSupply } from '@/lib/utils/format';
 
 // ── Custom sorting: nulls always last ───────────────────────────────
 
-const supplySort: SortingFn<ChainSupply> = (rowA, rowB) =>
+const supplySort: SortFn<SupplyTableFeatures, ChainSupply> = (rowA, rowB) =>
   compareSupply(rowA.original.supply, rowB.original.supply);
 
 // ── Column definitions ──────────────────────────────────────────────
 
-export const columns: ColumnDef<ChainSupply>[] = [
+export const columns: ColumnDef<SupplyTableFeatures, ChainSupply>[] = [
   {
     id: 'network',
     header: 'Network',
@@ -120,7 +121,7 @@ export const columns: ColumnDef<ChainSupply>[] = [
         </Button>
       );
     },
-    sortingFn: supplySort,
+    sortFn: supplySort,
     cell: ({ row }) => {
       const { supply, isLoading, isError } = row.original;
       if (isLoading) return <Skeleton className="ml-auto h-4 w-32 rounded" />;
