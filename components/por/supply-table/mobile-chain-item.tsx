@@ -1,6 +1,6 @@
 'use client';
 
-import type { VisibilityState } from '@tanstack/react-table';
+import type { ColumnVisibilityState } from '@tanstack/react-table';
 import { ExternalLink, TriangleAlertIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -22,7 +22,7 @@ export function MobileChainItem({
   columnVisibility,
 }: {
   chain: ChainSupply;
-  columnVisibility: VisibilityState;
+  columnVisibility: ColumnVisibilityState;
 }) {
   const address = CHAIN_TOKEN_ADDRESSES[chain.chain];
   const explorerUrl = CHAIN_EXPLORER_URLS[chain.chain];
@@ -76,7 +76,7 @@ export function MobileChainItem({
               <TriangleAlertIcon className="size-3.5 shrink-0" />
               Failed to fetch
             </span>
-          ) : chain.supply != null ? (
+          ) : chain.supply !== null ? (
             <span className="text-sm font-medium text-foreground tabular-nums">
               {formatSupply(chain.supply)}
             </span>

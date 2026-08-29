@@ -15,7 +15,9 @@
       "!**/.next",
       "!**/.vercel",
       "!**/.turbo",
-      "!next-env.d.ts"
+      "!next-env.d.ts",
+      // Third-party chain/brand logos, not authored source
+      "!public/**/*.svg"
     ]
   },
   "formatter": {

@@ -1,6 +1,6 @@
 'use client';
 
-import type { VisibilityState } from '@tanstack/react-table';
+import type { ColumnVisibilityState } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useMemo } from 'react';
 import { MobileChainItem } from '@/components/por/supply-table/mobile-chain-item';
@@ -44,7 +44,7 @@ export function MobileLayout({
 }: {
   data: ChainSupply[];
   sortDesc: boolean;
-  columnVisibility: VisibilityState;
+  columnVisibility: ColumnVisibilityState;
 }) {
   const sorted = useMemo(() => {
     return [...data].sort((a, b) =>
@@ -74,7 +74,7 @@ export function MobileLayoutSkeleton({
   columnVisibility,
 }: {
   rowCount: number;
-  columnVisibility: VisibilityState;
+  columnVisibility: ColumnVisibilityState;
 }) {
   return (
     <CardContent className="p-0">

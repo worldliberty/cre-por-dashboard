@@ -1,6 +1,9 @@
 'use client';
 
-import type { SortingState, VisibilityState } from '@tanstack/react-table';
+import type {
+  ColumnVisibilityState,
+  SortingState,
+} from '@tanstack/react-table';
 import { Columns3, RefreshCw } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useIsClient, useMediaQuery } from 'usehooks-ts';
@@ -31,7 +34,10 @@ const TOGGLEABLE_COLUMNS = [
   { id: 'lockedInPool', label: 'Locked in CCIP' },
 ] as const;
 
-const DEFAULT_HIDDEN: VisibilityState = { type: false, lockedInPool: false };
+const DEFAULT_HIDDEN: ColumnVisibilityState = {
+  type: false,
+  lockedInPool: false,
+};
 
 interface ChainSupplyDetailsProps {
   nativeChains: ChainSupply[];
@@ -53,7 +59,7 @@ export function ChainSupplyDetails({
   ]);
 
   const [columnVisibility, setColumnVisibility] =
-    useState<VisibilityState>(DEFAULT_HIDDEN);
+    useState<ColumnVisibilityState>(DEFAULT_HIDDEN);
   const showDetails =
     columnVisibility.type !== false || columnVisibility.lockedInPool !== false;
   const toggleColumn = (columnId: string) =>
@@ -71,7 +77,7 @@ export function ChainSupplyDetails({
 
   const rawTotalSupply = useMemo(() => {
     const entries = nativeChains.flatMap((c) =>
-      c.rawSupply != null
+      c.rawSupply !== null
         ? [{ raw: c.rawSupply, decimals: CHAIN_META[c.chain].decimals }]
         : [],
     );

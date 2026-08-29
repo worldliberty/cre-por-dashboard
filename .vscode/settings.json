@@ -19,5 +19,6 @@
     "@radix-ui/*",
     "postcss",
     "lucide-react"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

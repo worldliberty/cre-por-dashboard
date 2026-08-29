@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
-import { plumeMainnet } from 'viem/chains';
+import { plumeMainnet, tempo } from 'viem/chains';
 import { WagmiProvider } from 'wagmi';
 import { bsc, mainnet, mantle, monad, morph } from 'wagmi/chains';
 import { ab } from '@/lib/contracts/usd1-token';
@@ -18,6 +18,7 @@ const CHAIN_NAME_TO_ID: Record<string, number> = {
   monad: monad.id,
   mantle: mantle.id,
   morph: morph.id,
+  tempo: tempo.id,
 };
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {

@@ -1,6 +1,9 @@
 import { TriangleAlertIcon } from 'lucide-react';
+import Link from 'next/link';
 import { FormattedNumber } from '@/components/primitives/formatted-number';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { siteConfig } from '@/lib/config/site';
 
 interface HeroProps {
   reserves: number;
@@ -40,6 +43,21 @@ export function Hero({ reserves, fetchTime, isLoading, isError }: HeroProps) {
       <p className="text-sm text-foreground-tertiary">
         {fetchTime ? `Last refresh: ${fetchTime}` : 'Loading...'}
       </p>
+
+      <Button
+        asChild={true}
+        className="mt-6 w-full rounded-full sm:w-auto"
+        size="lg"
+        variant="outline"
+      >
+        <Link
+          href={siteConfig.routes.usd1AttestationReports}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          See attestation reports
+        </Link>
+      </Button>
     </section>
   );
 }

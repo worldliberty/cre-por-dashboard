@@ -28,6 +28,7 @@ export const customRpcsSchema = z.object({
   monad: rpcUrlArray,
   mantle: rpcUrlArray,
   morph: rpcUrlArray,
+  tempo: rpcUrlArray,
 });
 
 /** Form-level schema used by react-hook-form. */
