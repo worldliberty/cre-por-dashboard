@@ -28,7 +28,7 @@ export const DEFAULT_MANTLE_RPCS = ['https://rpc.mantle.xyz'];
 
 export const DEFAULT_MORPH_RPCS = ['https://rpc.morphl2.io'];
 
-export const DEFAULT_TEMPO_RPCS = ['https://rpc.presto.tempo.xyz'];
+export const DEFAULT_TEMPO_RPCS = ['https://rpc.tempo.xyz'];
 
 const DEFAULT_RPCS: Record<number, string[]> = {
   [mainnet.id]: DEFAULT_ETH_RPCS,
